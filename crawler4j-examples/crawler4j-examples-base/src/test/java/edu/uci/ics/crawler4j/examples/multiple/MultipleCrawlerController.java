@@ -2,6 +2,7 @@ package edu.uci.ics.crawler4j.examples.multiple;
 
 import java.util.List;
 
+import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +10,6 @@ import com.google.common.collect.ImmutableList;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
-import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 

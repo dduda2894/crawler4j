@@ -76,6 +76,7 @@ public class URLCanonicalizer {
                     .replace(String.valueOf((char)12288), "%E3%80%80")
                     .replace(String.valueOf((char)32), "%20")).normalize().toString();
 
+
             int idx = path.indexOf("//");
             while (idx >= 0) {
                 path = path.replace("//", "/");

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
 import org.apache.http.HttpStatus;
 import org.apache.http.impl.EnglishReasonPhraseCatalog;
 import org.slf4j.Logger;
@@ -32,7 +33,6 @@ import edu.uci.ics.crawler4j.crawler.exceptions.ContentFetchException;
 import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
 import edu.uci.ics.crawler4j.crawler.exceptions.ParseException;
 import edu.uci.ics.crawler4j.fetcher.PageFetchResult;
-import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.frontier.DocIDServer;
 import edu.uci.ics.crawler4j.frontier.Frontier;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;

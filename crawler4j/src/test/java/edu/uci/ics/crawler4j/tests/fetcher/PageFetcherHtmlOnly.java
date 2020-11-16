@@ -6,13 +6,13 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
+import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpHead;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
 import edu.uci.ics.crawler4j.fetcher.PageFetchResult;
-import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 public class PageFetcherHtmlOnly extends PageFetcher {

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package edu.uci.ics.crawler4j.fetcher;
+package edu.uci.ics.crawler4j.fetcher.apachehttpfetcher;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -251,10 +251,10 @@ public class PageFetcher {
         }
     }
 
-    public PageFetchResult fetchPage(WebURL webUrl)
+    public edu.uci.ics.crawler4j.fetcher.PageFetchResult fetchPage(WebURL webUrl)
             throws InterruptedException, IOException, PageBiggerThanMaxSizeException {
         // Getting URL, setting headers & content
-        PageFetchResult fetchResult = new PageFetchResult(config.isHaltOnError());
+        edu.uci.ics.crawler4j.fetcher.PageFetchResult fetchResult = new edu.uci.ics.crawler4j.fetcher.PageFetchResult(config.isHaltOnError());
         String toFetchURL = webUrl.getURL();
         HttpUriRequest request = null;
         try {

@@ -24,6 +24,7 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
 import org.apache.http.HttpStatus;
 import org.apache.http.NoHttpResponseException;
 import org.slf4j.Logger;
@@ -33,7 +34,6 @@ import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
 import edu.uci.ics.crawler4j.fetcher.PageFetchResult;
-import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.url.WebURL;
 import edu.uci.ics.crawler4j.util.Util;
 

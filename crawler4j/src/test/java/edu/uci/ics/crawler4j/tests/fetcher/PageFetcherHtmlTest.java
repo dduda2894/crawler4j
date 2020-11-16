@@ -1,5 +1,6 @@
 package edu.uci.ics.crawler4j.tests.fetcher;
 
+import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -9,7 +10,6 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.Page;
-import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 public class PageFetcherHtmlTest {
