@@ -53,6 +53,7 @@ public class ChromePageFetcher implements Fetcher {
     protected final CrawlConfig config;
     protected Map<String, LocalDateTime> lastFetchTimeByTopLevelDomain = new ConcurrentHashMap<>();
 
+    //TODO(Take Chrome instance as an argument in constructor instead of hard coding it)
     public ChromePageFetcher(CrawlConfig config) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
         this.config = config;
     }
@@ -148,12 +149,7 @@ public class ChromePageFetcher implements Fetcher {
 
     @Override
     public synchronized void shutDown() {
-        if (chrome.chromeLauncher.isAlive()) {
-            try {
-                chrome.chromeLauncher.close();
-            } catch (Exception e) {
-            }
-        }
+        chrome.shutdown();
     }
 
     public static void main(String[] args) {
