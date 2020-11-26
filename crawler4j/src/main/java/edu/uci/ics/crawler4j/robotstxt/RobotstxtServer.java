@@ -24,7 +24,10 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.uci.ics.crawler4j.crawler.exceptions.ParseException;
 import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
+import edu.uci.ics.crawler4j.fetcher.devtoolsfetcher.Fetcher;
+import edu.uci.ics.crawler4j.fetcher.pojo.PageFetchResult;
 import org.apache.http.HttpStatus;
 import org.apache.http.NoHttpResponseException;
 import org.slf4j.Logger;
@@ -33,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
-import edu.uci.ics.crawler4j.fetcher.PageFetchResult;
 import edu.uci.ics.crawler4j.url.WebURL;
 import edu.uci.ics.crawler4j.util.Util;
 
@@ -50,15 +52,15 @@ public class RobotstxtServer {
 
     protected final Map<String, HostDirectives> host2directivesCache = new HashMap<>();
 
-    protected PageFetcher pageFetcher;
+    protected Fetcher pageFetcher;
 
     private final int maxBytes;
 
-    public RobotstxtServer(RobotstxtConfig config, PageFetcher pageFetcher) {
+    public RobotstxtServer(RobotstxtConfig config, Fetcher pageFetcher) {
         this(config, pageFetcher, 16384);
     }
 
-    public RobotstxtServer(RobotstxtConfig config, PageFetcher pageFetcher, int maxBytes) {
+    public RobotstxtServer(RobotstxtConfig config, Fetcher pageFetcher, int maxBytes) {
         this.config = config;
         this.pageFetcher = pageFetcher;
         this.maxBytes = maxBytes;
@@ -97,13 +99,14 @@ public class RobotstxtServer {
             return directives.allows(path);
         } catch (MalformedURLException e) {
             logger.error("Bad URL in Robots.txt: " + webURL.getURL(), e);
+        } catch (ParseException e) {
+            logger.error("Bad URL in Robots.txt: " + webURL.getURL(), e);
         }
-
         logger.warn("RobotstxtServer: default: allow", webURL.getURL());
         return true;
     }
 
-    private HostDirectives fetchDirectives(URL url) throws IOException, InterruptedException {
+    private HostDirectives fetchDirectives(URL url) throws IOException, InterruptedException, ParseException {
         WebURL robotsTxtUrl = new WebURL();
         String host = getHost(url);
         String port = ((url.getPort() == url.getDefaultPort()) || (url.getPort() == -1)) ? "" :

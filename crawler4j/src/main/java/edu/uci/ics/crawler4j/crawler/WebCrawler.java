@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Locale;
 
 import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
+import edu.uci.ics.crawler4j.fetcher.devtoolsfetcher.Fetcher;
+import edu.uci.ics.crawler4j.fetcher.pojo.PageFetchResult;
 import org.apache.http.HttpStatus;
 import org.apache.http.impl.EnglishReasonPhraseCatalog;
 import org.slf4j.Logger;
@@ -32,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import edu.uci.ics.crawler4j.crawler.exceptions.ContentFetchException;
 import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
 import edu.uci.ics.crawler4j.crawler.exceptions.ParseException;
-import edu.uci.ics.crawler4j.fetcher.PageFetchResult;
 import edu.uci.ics.crawler4j.frontier.DocIDServer;
 import edu.uci.ics.crawler4j.frontier.Frontier;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
@@ -76,7 +77,7 @@ public class WebCrawler implements Runnable {
     /**
      * The fetcher that is used by this crawler instance to fetch the content of pages from the web.
      */
-    private PageFetcher pageFetcher;
+    private Fetcher pageFetcher;
 
     /**
      * The RobotstxtServer instance that is used by this crawler instance to

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,27 +17,17 @@
 
 package edu.uci.ics.crawler4j.fetcher.apachehttpfetcher;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.SSLContext;
-
-import org.apache.http.Header;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
+import edu.uci.ics.crawler4j.crawler.CrawlConfig;
+import edu.uci.ics.crawler4j.crawler.authentication.AuthInfo;
+import edu.uci.ics.crawler4j.crawler.authentication.BasicAuthInfo;
+import edu.uci.ics.crawler4j.crawler.authentication.FormAuthInfo;
+import edu.uci.ics.crawler4j.crawler.authentication.NtAuthInfo;
+import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
+import edu.uci.ics.crawler4j.fetcher.devtoolsfetcher.Fetcher;
+import edu.uci.ics.crawler4j.fetcher.pojo.PageFetchResult;
+import edu.uci.ics.crawler4j.url.URLCanonicalizer;
+import edu.uci.ics.crawler4j.url.WebURL;
+import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
@@ -66,19 +56,21 @@ import org.apache.http.ssl.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.ics.crawler4j.crawler.CrawlConfig;
-import edu.uci.ics.crawler4j.crawler.authentication.AuthInfo;
-import edu.uci.ics.crawler4j.crawler.authentication.BasicAuthInfo;
-import edu.uci.ics.crawler4j.crawler.authentication.FormAuthInfo;
-import edu.uci.ics.crawler4j.crawler.authentication.NtAuthInfo;
-import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
-import edu.uci.ics.crawler4j.url.URLCanonicalizer;
-import edu.uci.ics.crawler4j.url.WebURL;
+import javax.net.ssl.SSLContext;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+import java.util.*;
 
 /**
  * @author Yasser Ganjisaffar
  */
-public class PageFetcher {
+public class PageFetcher implements Fetcher {
     protected static final Logger logger = LoggerFactory.getLogger(PageFetcher.class);
     protected final Object mutex = new Object();
     /**
@@ -93,29 +85,27 @@ public class PageFetcher {
 
     public PageFetcher(CrawlConfig config) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
         this.config = config;
-
         RequestConfig requestConfig = RequestConfig.custom()
-                .setExpectContinueEnabled(false)
-                .setCookieSpec(config.getCookiePolicy())
-                .setRedirectsEnabled(false)
-                .setSocketTimeout(config.getSocketTimeout())
-                .setConnectTimeout(config.getConnectionTimeout())
-                .build();
-
+            .setExpectContinueEnabled(false)
+            .setCookieSpec(config.getCookiePolicy())
+            .setRedirectsEnabled(false)
+            .setSocketTimeout(config.getSocketTimeout())
+            .setConnectTimeout(config.getConnectionTimeout())
+            .build();
         RegistryBuilder<ConnectionSocketFactory> connRegistryBuilder = RegistryBuilder.create();
         connRegistryBuilder.register("http", PlainConnectionSocketFactory.INSTANCE);
         if (config.isIncludeHttpsPages()) {
             try { // Fixing: https://code.google.com/p/crawler4j/issues/detail?id=174
                 // By always trusting the ssl certificate
                 SSLContext sslContext =
-                        SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
-                            @Override
-                            public boolean isTrusted(final X509Certificate[] chain, String authType) {
-                                return true;
-                            }
-                        }).build();
+                    SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
+                        @Override
+                        public boolean isTrusted(final X509Certificate[] chain, String authType) {
+                            return true;
+                        }
+                    }).build();
                 SSLConnectionSocketFactory sslsf =
-                        new SniSSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+                    new SniSSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
                 connRegistryBuilder.register("https", sslsf);
             } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException | RuntimeException e) {
                 if (config.isHaltOnError()) {
@@ -126,13 +116,11 @@ public class PageFetcher {
                 }
             }
         }
-
         Registry<ConnectionSocketFactory> connRegistry = connRegistryBuilder.build();
         connectionManager =
-                new SniPoolingHttpClientConnectionManager(connRegistry, config.getDnsResolver());
+            new SniPoolingHttpClientConnectionManager(connRegistry, config.getDnsResolver());
         connectionManager.setMaxTotal(config.getMaxTotalConnections());
         connectionManager.setDefaultMaxPerRoute(config.getMaxConnectionsPerHost());
-
         HttpClientBuilder clientBuilder = HttpClientBuilder.create();
         if (config.getCookieStore() != null) {
             clientBuilder.setDefaultCookieStore(config.getCookieStore());
@@ -141,21 +129,18 @@ public class PageFetcher {
         clientBuilder.setConnectionManager(connectionManager);
         clientBuilder.setUserAgent(config.getUserAgentString());
         clientBuilder.setDefaultHeaders(config.getDefaultHeaders());
-
         Map<AuthScope, Credentials> credentialsMap = new HashMap<>();
         if (config.getProxyHost() != null) {
             if (config.getProxyUsername() != null) {
                 AuthScope authScope = new AuthScope(config.getProxyHost(), config.getProxyPort());
                 Credentials credentials = new UsernamePasswordCredentials(config.getProxyUsername(),
-                        config.getProxyPassword());
+                    config.getProxyPassword());
                 credentialsMap.put(authScope, credentials);
             }
-
             HttpHost proxy = new HttpHost(config.getProxyHost(), config.getProxyPort());
             clientBuilder.setProxy(proxy);
             logger.debug("Working through Proxy: {}", proxy.getHostName());
         }
-
         List<AuthInfo> authInfos = config.getAuthInfos();
         if (authInfos != null) {
             for (AuthInfo authInfo : authInfos) {
@@ -165,7 +150,6 @@ public class PageFetcher {
                     addNtCredentials((NtAuthInfo) authInfo, credentialsMap);
                 }
             }
-
             if (!credentialsMap.isEmpty()) {
                 CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 credentialsMap.forEach((AuthScope authscope, Credentials credentials) -> {
@@ -175,16 +159,14 @@ public class PageFetcher {
                 clientBuilder.addInterceptorFirst(new BasicAuthHttpRequestInterceptor());
             }
             httpClient = clientBuilder.build();
-
             authInfos.stream()
-                    .filter(info ->
-                            AuthInfo.AuthenticationType.FORM_AUTHENTICATION.equals(info.getAuthenticationType()))
-                    .map(FormAuthInfo.class::cast)
-                    .forEach(this::doFormLogin);
+                .filter(info ->
+                    AuthInfo.AuthenticationType.FORM_AUTHENTICATION.equals(info.getAuthenticationType()))
+                .map(FormAuthInfo.class::cast)
+                .forEach(this::doFormLogin);
         } else {
             httpClient = clientBuilder.build();
         }
-
         if (connectionMonitorThread == null) {
             connectionMonitorThread = new IdleConnectionMonitorThread(connectionManager);
         }
@@ -200,7 +182,7 @@ public class PageFetcher {
                                      Map<AuthScope, Credentials> credentialsMap) {
         logger.info("BASIC authentication for: {}", authInfo.getLoginTarget());
         Credentials credentials = new UsernamePasswordCredentials(authInfo.getUsername(),
-                authInfo.getPassword());
+            authInfo.getPassword());
         credentialsMap.put(new AuthScope(authInfo.getHost(), authInfo.getPort()), credentials);
     }
 
@@ -211,8 +193,8 @@ public class PageFetcher {
         logger.info("NT authentication for: {}", authInfo.getLoginTarget());
         try {
             Credentials credentials = new NTCredentials(authInfo.getUsername(),
-                    authInfo.getPassword(), InetAddress.getLocalHost().getHostName(),
-                    authInfo.getDomain());
+                authInfo.getPassword(), InetAddress.getLocalHost().getHostName(),
+                authInfo.getDomain());
             credentialsMap.put(new AuthScope(authInfo.getHost(), authInfo.getPort()), credentials);
         } catch (UnknownHostException e) {
             logger.error("Error creating NT credentials", e);
@@ -227,34 +209,34 @@ public class PageFetcher {
     private void doFormLogin(FormAuthInfo authInfo) {
         logger.info("FORM authentication for: {}", authInfo.getLoginTarget());
         String fullUri =
-                authInfo.getProtocol() + "://" + authInfo.getHost() + ":" + authInfo.getPort() +
-                        authInfo.getLoginTarget();
+            authInfo.getProtocol() + "://" + authInfo.getHost() + ":" + authInfo.getPort() +
+                authInfo.getLoginTarget();
         HttpPost httpPost = new HttpPost(fullUri);
         List<NameValuePair> formParams = new ArrayList<>();
         formParams.add(
-                new BasicNameValuePair(authInfo.getUsernameFormStr(), authInfo.getUsername()));
+            new BasicNameValuePair(authInfo.getUsernameFormStr(), authInfo.getUsername()));
         formParams.add(
-                new BasicNameValuePair(authInfo.getPasswordFormStr(), authInfo.getPassword()));
+            new BasicNameValuePair(authInfo.getPasswordFormStr(), authInfo.getPassword()));
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formParams, StandardCharsets.UTF_8);
         httpPost.setEntity(entity);
-
         try {
             httpClient.execute(httpPost);
             logger.debug("Successfully request to login in with user: {} to: {}", authInfo.getUsername(),
-                    authInfo.getHost());
+                authInfo.getHost());
         } catch (ClientProtocolException e) {
             logger.error("While trying to login to: {} - Client protocol not supported",
-                    authInfo.getHost(), e);
+                authInfo.getHost(), e);
         } catch (IOException e) {
             logger.error("While trying to login to: {} - Error making request", authInfo.getHost(),
-                    e);
+                e);
         }
     }
 
-    public edu.uci.ics.crawler4j.fetcher.PageFetchResult fetchPage(WebURL webUrl)
-            throws InterruptedException, IOException, PageBiggerThanMaxSizeException {
+    @Override
+    public PageFetchResult fetchPage(WebURL webUrl)
+        throws InterruptedException, IOException, PageBiggerThanMaxSizeException {
         // Getting URL, setting headers & content
-        edu.uci.ics.crawler4j.fetcher.PageFetchResult fetchResult = new edu.uci.ics.crawler4j.fetcher.PageFetchResult(config.isHaltOnError());
+        PageFetchResult fetchResult = new PageFetchResult(config.isHaltOnError());
         String toFetchURL = webUrl.getURL();
         HttpUriRequest request = null;
         try {
@@ -269,27 +251,23 @@ public class PageFetcher {
                     lastFetchTime = (new Date()).getTime();
                 }
             }
-
             CloseableHttpResponse response = httpClient.execute(request);
             fetchResult.setEntity(response.getEntity());
             fetchResult.setResponseHeaders(response.getAllHeaders());
-
             // Setting HttpStatus
             int statusCode = response.getStatusLine().getStatusCode();
-
             // If Redirect ( 3xx )
             if (statusCode == HttpStatus.SC_MOVED_PERMANENTLY ||
-                    statusCode == HttpStatus.SC_MOVED_TEMPORARILY ||
-                    statusCode == HttpStatus.SC_MULTIPLE_CHOICES ||
-                    statusCode == HttpStatus.SC_SEE_OTHER ||
-                    statusCode == HttpStatus.SC_TEMPORARY_REDIRECT ||
-                    statusCode == 308) { // todo follow
+                statusCode == HttpStatus.SC_MOVED_TEMPORARILY ||
+                statusCode == HttpStatus.SC_MULTIPLE_CHOICES ||
+                statusCode == HttpStatus.SC_SEE_OTHER ||
+                statusCode == HttpStatus.SC_TEMPORARY_REDIRECT ||
+                statusCode == 308) { // todo follow
                 // https://issues.apache.org/jira/browse/HTTPCORE-389
-
                 Header header = response.getFirstHeader(HttpHeaders.LOCATION);
                 if (header != null) {
                     String movedToUrl =
-                            URLCanonicalizer.getCanonicalURL(header.getValue(), toFetchURL);
+                        URLCanonicalizer.getCanonicalURL(header.getValue(), toFetchURL);
                     fetchResult.setMovedToUrl(movedToUrl);
                 }
             } else if (statusCode >= 200 && statusCode <= 299) { // is 2XX, everything looks ok
@@ -300,7 +278,6 @@ public class PageFetcher {
                         fetchResult.setFetchedUrl(uri);
                     }
                 }
-
                 // Checking maximum size
                 if (fetchResult.getEntity() != null) {
                     long size = fetchResult.getEntity().getContentLength();
@@ -320,10 +297,8 @@ public class PageFetcher {
                     }
                 }
             }
-
             fetchResult.setStatusCode(statusCode);
             return fetchResult;
-
         } finally { // occurs also with thrown exceptions
             if ((fetchResult.getEntity() == null) && (request != null)) {
                 request.abort();
@@ -331,6 +306,7 @@ public class PageFetcher {
         }
     }
 
+    @Override
     public synchronized void shutDown() {
         if (connectionMonitorThread != null) {
             connectionManager.shutdown();

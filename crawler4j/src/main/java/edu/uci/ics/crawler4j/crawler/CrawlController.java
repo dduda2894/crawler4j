@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
+import edu.uci.ics.crawler4j.fetcher.devtoolsfetcher.Fetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +76,7 @@ public class CrawlController {
      */
     protected boolean shuttingDown;
 
-    protected PageFetcher pageFetcher;
+    protected Fetcher pageFetcher;
     protected RobotstxtServer robotstxtServer;
     protected Frontier frontier;
     protected DocIDServer docIdServer;
@@ -86,17 +87,17 @@ public class CrawlController {
 
     protected Parser parser;
 
-    public CrawlController(CrawlConfig config, PageFetcher pageFetcher,
+    public CrawlController(CrawlConfig config, Fetcher pageFetcher,
                            RobotstxtServer robotstxtServer) throws Exception {
         this(config, pageFetcher, null, robotstxtServer, null);
     }
 
-    public CrawlController(CrawlConfig config, PageFetcher pageFetcher,
+    public CrawlController(CrawlConfig config, Fetcher pageFetcher,
             RobotstxtServer robotstxtServer, TLDList tldList) throws Exception {
         this(config, pageFetcher, null, robotstxtServer, tldList);
     }
 
-    public CrawlController(CrawlConfig config, PageFetcher pageFetcher, Parser parser,
+    public CrawlController(CrawlConfig config, Fetcher pageFetcher, Parser parser,
                            RobotstxtServer robotstxtServer, TLDList tldList) throws Exception {
         config.validate();
         this.config = config;
@@ -582,11 +583,11 @@ public class CrawlController {
         }
     }
 
-    public PageFetcher getPageFetcher() {
+    public Fetcher getPageFetcher() {
         return pageFetcher;
     }
 
-    public void setPageFetcher(PageFetcher pageFetcher) {
+    public void setPageFetcher(Fetcher pageFetcher) {
         this.pageFetcher = pageFetcher;
     }
 
