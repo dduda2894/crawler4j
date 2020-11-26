@@ -17,6 +17,7 @@ import edu.uci.ics.crawler4j.fetcher.pojo.HttpEntityImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
+import org.apache.http.entity.ContentType;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -26,9 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -43,8 +42,8 @@ public class Chrome {
 
     protected static final Logger LOG = LoggerFactory.getLogger(Chrome.class);
 
-    public ChromeLauncher chromeLauncher = new ChromeLauncher();
-    private ChromeService chromeService = chromeLauncher.launch(true);
+    private ChromeLauncher chromeLauncher;
+    private ChromeService chromeService;
     private final Object mutex = new Object();
     private int chromeStarts = 0;
     private List<String> greyListedMimeTypes = new ArrayList<String>();
@@ -57,7 +56,7 @@ public class Chrome {
 
     public void launchCrome() {
         synchronized (mutex) {
-            if (!chromeLauncher.isAlive()) {
+            if (chromeLauncher != null && !chromeLauncher.isAlive()) {
                 chromeLauncher = new ChromeLauncher();
                 chromeService = chromeLauncher.launch(true);
                 if (!chromeLauncher.isAlive()) {
@@ -85,7 +84,7 @@ public class Chrome {
                 Network network = devToolsService.getNetwork();
                 network.setCacheDisabled(true);
                 Emulation emulation = devToolsService.getEmulation();
-                emulation.setUserAgentOverride("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36");
+                emulation.setUserAgentOverride(userAgent);
                 Security security = devToolsService.getSecurity();
                 security.enable();
                 security.setIgnoreCertificateErrors(true);
@@ -103,7 +102,7 @@ public class Chrome {
                 countDownLatch.await(120, TimeUnit.SECONDS);
                 if (!httpEntity.isRedirect) {
                     if (httpEntity.contentType.getValue().trim().toLowerCase().contains("application/pdf") ||
-                        httpEntity.contentType.getValue().trim().toLowerCase().contains("application/octet-stream")) {
+                        httpEntity.contentType.getValue().trim().toLowerCase().contains(ContentType.APPLICATION_OCTET_STREAM.getMimeType())) {
                         //TODO replace with chromeDevTool Page protocol downloadProgressEvent
                         sendRequestWithJsoup(webUrl, httpEntity);
                     } else {
@@ -168,16 +167,6 @@ public class Chrome {
                 httpEntity.requestUrl.equals(responseReceived.getResponse().getUrl())) {
                 LOG.debug("Response received");
                 httpEntity.contentType = new HeaderImpl(HttpHeaders.CONTENT_TYPE, responseReceived.getResponse().getMimeType());
-                for (String greyListedMimeType : greyListedMimeTypes) {
-                    if (httpEntity.contentType.getValue().toLowerCase().contains(greyListedMimeType)) {
-                        LOG.info("Greylisted type {} at url {}", httpEntity.contentType.getValue(), httpEntity.requestUrl);
-                        httpEntity.status = 500;
-                        httpEntity.isSuccess = false;
-                        countDownLatch.countDown();
-                        page.stopLoading();
-                        return;
-                    }
-                }
                 Integer status = responseReceived.getResponse().getStatus();
                 httpEntity.status = status;
                 Map<String, Object> responseHeaders = responseReceived.getResponse().getHeaders();
