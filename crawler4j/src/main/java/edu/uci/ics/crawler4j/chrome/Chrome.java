@@ -46,7 +46,7 @@ public class Chrome {
     private ChromeService chromeService;
     private final Object mutex = new Object();
     private int chromeStarts = 0;
-    private List<String> greyListedMimeTypes = new ArrayList<String>();
+    private String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36";
 
     public Chrome() {
 //        System.setProperty(
@@ -281,5 +281,22 @@ public class Chrome {
             LOG.debug("Request extra info " + requestWillBeSentExtraInfo.getHeaders().toString());
             LOG.debug("Request extra info " + requestWillBeSentExtraInfo.getRequestId());
         });
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public void shutdown(){
+        if (chromeLauncher.isAlive()) {
+            try {
+                chromeLauncher.close();
+            } catch (Exception e) {
+            }
+        }
     }
 }
