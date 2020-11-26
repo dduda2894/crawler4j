@@ -146,6 +146,7 @@ public class Chrome {
             Connection.Response execute = Jsoup.connect(url).ignoreContentType(true)
                 .ignoreHttpErrors(true)
                 .timeout(Integer.valueOf(Long.valueOf(Duration.ofMinutes(2).toMillis()).toString()))
+                //TODO(Allow to change max body size)
                 .maxBodySize(25_000_000)
                 .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36")
                 .followRedirects(false).execute();
@@ -291,7 +292,7 @@ public class Chrome {
         this.userAgent = userAgent;
     }
 
-    public void shutdown(){
+    public void shutdown() {
         if (chromeLauncher.isAlive()) {
             try {
                 chromeLauncher.close();
