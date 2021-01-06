@@ -85,7 +85,12 @@ public class Controller {
         config.setCrawlStorageFolder(crawlStorageFolder);
 
         // Instantiate the controller for this crawl.
-        PageFetcher pageFetcher = new PageFetcher(config);
+        Fetcher pageFetcher;
+            if (CrawlType.CHROME_BASED.equals(crawlType)) {
+                pageFetcher = new ChromePageFetcher(config);
+            } else {
+                pageFetcher = new Crawl4jPageFetcher(config);
+            }
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
