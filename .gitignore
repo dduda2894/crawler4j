@@ -4,6 +4,7 @@ build
 
 # IntelliJ IDEA
 **/*.iml
+.idea/
 
 # Eclipse
 .classpath
