@@ -1,6 +1,6 @@
 package edu.uci.ics.crawler4j.examples;
 
-import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
+import edu.uci.ics.crawler4j.fetcher.crawl4jfetcher.PageFetcher;
 import org.flywaydb.core.Flyway;
 
 import com.google.common.io.Files;

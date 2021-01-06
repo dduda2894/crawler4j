@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package edu.uci.ics.crawler4j.fetcher.apachehttpfetcher;
+package edu.uci.ics.crawler4j.fetcher.crawl4jfetcher;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.authentication.AuthInfo;
@@ -70,8 +70,8 @@ import java.util.*;
 /**
  * @author Yasser Ganjisaffar
  */
-public class PageFetcher implements Fetcher {
-    protected static final Logger logger = LoggerFactory.getLogger(PageFetcher.class);
+public class Crawl4jPageFetcher implements Fetcher {
+    protected static final Logger logger = LoggerFactory.getLogger(Crawl4jPageFetcher.class);
     protected final Object mutex = new Object();
     /**
      * This field is protected for retro compatibility. Please use the getter method: getConfig() to
@@ -83,7 +83,7 @@ public class PageFetcher implements Fetcher {
     protected long lastFetchTime = 0;
     protected IdleConnectionMonitorThread connectionMonitorThread = null;
 
-    public PageFetcher(CrawlConfig config) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
+    public Crawl4jPageFetcher(CrawlConfig config) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
         this.config = config;
         RequestConfig requestConfig = RequestConfig.custom()
             .setExpectContinueEnabled(false)

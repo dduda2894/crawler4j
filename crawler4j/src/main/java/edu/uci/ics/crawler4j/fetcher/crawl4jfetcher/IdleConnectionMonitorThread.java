@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package edu.uci.ics.crawler4j.fetcher.apachehttpfetcher;
+package edu.uci.ics.crawler4j.fetcher.crawl4jfetcher;
 
 import java.util.concurrent.TimeUnit;
 

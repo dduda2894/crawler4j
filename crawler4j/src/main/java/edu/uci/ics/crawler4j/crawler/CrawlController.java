@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
 import edu.uci.ics.crawler4j.fetcher.devtoolsfetcher.Fetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

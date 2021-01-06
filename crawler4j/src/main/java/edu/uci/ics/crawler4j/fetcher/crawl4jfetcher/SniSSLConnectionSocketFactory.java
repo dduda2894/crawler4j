@@ -1,4 +1,4 @@
-package edu.uci.ics.crawler4j.fetcher.apachehttpfetcher;
+package edu.uci.ics.crawler4j.fetcher.crawl4jfetcher;
 
 import java.io.IOException;
 import java.net.Socket;

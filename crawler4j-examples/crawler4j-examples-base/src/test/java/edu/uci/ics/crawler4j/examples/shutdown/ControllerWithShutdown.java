@@ -19,7 +19,7 @@ package edu.uci.ics.crawler4j.examples.shutdown;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
-import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
+import edu.uci.ics.crawler4j.fetcher.crawl4jfetcher.PageFetcher;
 import edu.uci.ics.crawler4j.fetcher.devtoolsfetcher.Fetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;

@@ -1,4 +1,4 @@
-package edu.uci.ics.crawler4j.fetcher.apachehttpfetcher;
+package edu.uci.ics.crawler4j.fetcher.crawl4jfetcher;
 
 import org.apache.http.HttpClientConnection;
 import org.apache.http.config.Registry;

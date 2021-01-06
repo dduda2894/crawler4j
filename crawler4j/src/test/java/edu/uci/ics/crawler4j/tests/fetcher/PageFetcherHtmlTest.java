@@ -1,6 +1,6 @@
 package edu.uci.ics.crawler4j.tests.fetcher;
 
-import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
+import edu.uci.ics.crawler4j.fetcher.crawl4jfetcher.Crawl4jPageFetcher;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -49,7 +49,7 @@ public class PageFetcherHtmlTest {
         WebURL url = new WebURL();
 
         url.setURL("http://localhost:" + wireMockRule.port() + "/some/index.html");
-        PageFetcher pf = new PageFetcherHtmlOnly(cfg);
+        Crawl4jPageFetcher pf = new PageFetcherHtmlOnly(cfg);
         pf.fetchPage(url).fetchContent(new Page(url), 47);
 
         WireMock.verify(1, WireMock.headRequestedFor(WireMock.urlEqualTo("/some/index.html")));

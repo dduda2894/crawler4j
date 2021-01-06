@@ -17,7 +17,7 @@
 
 package edu.uci.ics.crawler4j.examples.statushandler;
 
-import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
+import edu.uci.ics.crawler4j.fetcher.crawl4jfetcher.PageFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

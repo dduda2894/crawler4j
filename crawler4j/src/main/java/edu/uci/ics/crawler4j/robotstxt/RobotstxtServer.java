@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.uci.ics.crawler4j.crawler.exceptions.ParseException;
-import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
 import edu.uci.ics.crawler4j.fetcher.devtoolsfetcher.Fetcher;
 import edu.uci.ics.crawler4j.fetcher.pojo.PageFetchResult;
 import org.apache.http.HttpStatus;

@@ -6,7 +6,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
-import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
+import edu.uci.ics.crawler4j.fetcher.crawl4jfetcher.Crawl4jPageFetcher;
 import edu.uci.ics.crawler4j.fetcher.pojo.PageFetchResult;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpHead;
@@ -15,7 +15,7 @@ import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
 import edu.uci.ics.crawler4j.url.WebURL;
 
-public class PageFetcherHtmlOnly extends PageFetcher {
+public class PageFetcherHtmlOnly extends Crawl4jPageFetcher {
 
     public PageFetcherHtmlOnly(CrawlConfig config)
             throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
