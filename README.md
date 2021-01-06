@@ -171,19 +171,6 @@ However, this parameter can be tuned:
 crawlConfig.setPolitenessDelay(politenessDelay);
 ```
 
-### Proxy
-Should your crawl run behind a proxy? If so, you can use:
-
-```java
-crawlConfig.setProxyHost("proxyserver.example.com");
-crawlConfig.setProxyPort(8080);
-```
-If your proxy also needs authentication:
-```java
-crawlConfig.setProxyUsername(username);
-crawlConfig.setProxyPassword(password);
-```
-
 ### Resumable Crawling
 Sometimes you need to run a crawler for a long time. It is possible that the crawler
 terminates unexpectedly. In such cases, it might be desirable to resume the crawling.
