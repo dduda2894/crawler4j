@@ -77,6 +77,7 @@ the folder in which intermediate crawl data should be stored and the number of c
 
 ```java
 public class Controller {
+     static CrawlType crawlType = CrawlType.CHROME_BASED;
     public static void main(String[] args) throws Exception {
         String crawlStorageFolder = "/data/crawl/root";
         int numberOfCrawlers = 7;
@@ -86,11 +87,11 @@ public class Controller {
 
         // Instantiate the controller for this crawl.
         Fetcher pageFetcher;
-            if (CrawlType.CHROME_BASED.equals(crawlType)) {
-                pageFetcher = new ChromePageFetcher(config);
-            } else {
-                pageFetcher = new Crawl4jPageFetcher(config);
-            }
+        if (CrawlType.CHROME_BASED.equals(crawlType)) {
+            pageFetcher = new ChromePageFetcher(config);
+        } else {
+            pageFetcher = new Crawl4jPageFetcher(config);
+        }
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
@@ -100,11 +101,11 @@ public class Controller {
         // which are found in these pages
         controller.addSeed("https://www.ics.uci.edu/~lopes/");
         controller.addSeed("https://www.ics.uci.edu/~welling/");
-    	controller.addSeed("https://www.ics.uci.edu/");
-    	
-    	// The factory which creates instances of crawlers.
-        CrawlController.WebCrawlerFactory<BasicCrawler> factory = MyCrawler::new;
-        
+        controller.addSeed("https://www.ics.uci.edu/");
+
+        // The factory which creates instances of crawlers.
+        CrawlController.WebCrawlerFactory<MyCrawler> factory = MyCrawler::new;
+
         // Start the crawl. This is a blocking operation, meaning that your code
         // will reach the line after this only when crawling is finished.
         controller.start(factory, numberOfCrawlers);
