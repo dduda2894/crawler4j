@@ -56,7 +56,7 @@ public class Chrome {
 
     public void launchCrome() {
         synchronized (mutex) {
-            if (chromeLauncher != null && !chromeLauncher.isAlive()) {
+            if (chromeLauncher == null || !chromeLauncher.isAlive()) {
                 chromeLauncher = new ChromeLauncher();
                 chromeService = chromeLauncher.launch(true);
                 if (!chromeLauncher.isAlive()) {
