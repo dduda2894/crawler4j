@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import edu.uci.ics.crawler4j.fetcher.apachehttpfetcher.PageFetcher;
 import edu.uci.ics.crawler4j.fetcher.devtoolsfetcher.Fetcher;
 import edu.uci.ics.crawler4j.fetcher.pojo.PageFetchResult;
 import org.apache.http.HttpStatus;
