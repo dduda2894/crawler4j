@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+	<appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<!--<pattern>%logger{35} [%thread]%n%d %-5level - %msg%n</pattern>-->
+
+			<pattern>%logger{35} %-5level - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="consoleAppender"/>
+	</root>
+
+	<logger name="org.apache" level="ERROR"/>
+	<logger name="org.apache.pdfbox.pdmodel" level="ERROR"/>
+	<logger name="org.apache.fontbox" level="ERROR"/>
+	<logger name="org.apache.fontbox" level="ERROR"/>
+	<logger name="com.github.kklisura.cdt.services.impl" level="ERROR"/>
+    <logger name="edu.uci.ics.crawler4j.chrome" level="INFO"/>
+
+
+
+</configuration>
