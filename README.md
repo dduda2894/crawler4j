@@ -8,31 +8,11 @@ crawling the Web. Using it, you can setup a multi-threaded web crawler in few mi
 
 ## Table of content
 
-- [Installation](#installation)
 - [Quickstart](#quickstart)   
 - [More Examples](#more-examples)
 - [Configuration Details](#configuration-details)
 - [License](#license)
 
-## Installation
-
-### Using Maven
-
-Add the following dependency to your pom.xml:
-
-```xml
-    <dependency>
-        <groupId>edu.uci.ics</groupId>
-        <artifactId>crawler4j</artifactId>
-        <version>4.4.0</version>
-    </dependency>
-```
-
-### Using Gradle
-
-Add the following dependency to your build.gradle file:
-
-    compile group: 'edu.uci.ics', name: 'crawler4j', version: '4.4.0'
 
 ## Quickstart
 You need to create a crawler class that extends WebCrawler. This class decides which URLs
