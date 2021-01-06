@@ -182,6 +182,7 @@ If your proxy also needs authentication:
 ```java	
 crawlConfig.setProxyUsername(username);	
 crawlConfig.setProxyPassword(password);
+```
 
 ### Resumable Crawling
 Sometimes you need to run a crawler for a long time. It is possible that the crawler
