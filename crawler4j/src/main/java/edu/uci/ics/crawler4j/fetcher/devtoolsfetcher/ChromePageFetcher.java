@@ -18,17 +18,6 @@
 package edu.uci.ics.crawler4j.fetcher.devtoolsfetcher;
 
 
-import edu.uci.ics.crawler4j.chrome.Chrome;
-import edu.uci.ics.crawler4j.crawler.CrawlConfig;
-import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
-import edu.uci.ics.crawler4j.fetcher.pojo.HttpEntityImpl;
-import edu.uci.ics.crawler4j.fetcher.pojo.PageFetchResult;
-import edu.uci.ics.crawler4j.url.URLCanonicalizer;
-import edu.uci.ics.crawler4j.url.WebURL;
-import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -37,6 +26,18 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import edu.uci.ics.crawler4j.chrome.Chrome;
+import edu.uci.ics.crawler4j.crawler.CrawlConfig;
+import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
+import edu.uci.ics.crawler4j.fetcher.pojo.HttpEntityImpl;
+import edu.uci.ics.crawler4j.fetcher.pojo.PageFetchResult;
+import edu.uci.ics.crawler4j.url.URLCanonicalizer;
+import edu.uci.ics.crawler4j.url.WebURL;
 
 /**
  * @author Yasser Ganjisaffar
@@ -54,10 +55,10 @@ public class ChromePageFetcher implements Fetcher {
     protected Map<String, LocalDateTime> lastFetchTimeByTopLevelDomain = new ConcurrentHashMap<>();
 
     //TODO(Take Chrome instance as an argument in constructor instead of hard coding it)
-    public ChromePageFetcher(CrawlConfig config) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
+    public ChromePageFetcher(CrawlConfig config)
+        throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
         this.config = config;
     }
-
 
     @Override
     public PageFetchResult fetchPage(WebURL webUrl)
@@ -85,13 +86,10 @@ public class ChromePageFetcher implements Fetcher {
             logger.info("----------- retry... why this works?");
             //Todo find a case like this
         }
-//         If Redirect ( 3xx )
-        if (statusCode == HttpStatus.SC_MOVED_PERMANENTLY ||
-            statusCode == HttpStatus.SC_MOVED_TEMPORARILY ||
-            statusCode == HttpStatus.SC_MULTIPLE_CHOICES ||
-            statusCode == HttpStatus.SC_SEE_OTHER ||
-            statusCode == HttpStatus.SC_TEMPORARY_REDIRECT ||
-            statusCode == 308) { // todo follow
+        //         If Redirect ( 3xx )
+        if (statusCode == HttpStatus.SC_MOVED_PERMANENTLY || statusCode == HttpStatus.SC_MOVED_TEMPORARILY ||
+            statusCode == HttpStatus.SC_MULTIPLE_CHOICES || statusCode == HttpStatus.SC_SEE_OTHER ||
+            statusCode == HttpStatus.SC_TEMPORARY_REDIRECT || statusCode == 308) { // todo follow
             // https://issues.apache.org/jira/browse/HTTPCORE-389
             String movedToUrl = URLCanonicalizer.getCanonicalURL(response.redirectUrl, toFetchURL);
             fetchResult.setMovedToUrl(movedToUrl);
@@ -152,9 +150,6 @@ public class ChromePageFetcher implements Fetcher {
         chrome.shutdown();
     }
 
-    public static void main(String[] args) {
-        HttpEntityImpl httpEntity = new Chrome().fetchPage("https://www.england.nhs.uk/greenernhs/wp-content/uploads/sites/51/2020/10/delivering-a-net-zero-national-health-service.pdf");
-    }
 }
 
 
